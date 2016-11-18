@@ -14,13 +14,14 @@ Plugin 'bronson/vim-trailing-whitespace'
 " Plugin 'drmikehenry/vim-headerguard'
 Plugin 'easymotion/vim-easymotion'
 " Plugin 'elzr/vim-json'
-Plugin 'ervandew/supertab'
+" Plugin 'ervandew/supertab'
 Plugin 'gmarik/Vundle.vim'
 Plugin 'godlygeek/tabular'
 Plugin 'henrik/vim-indexed-search'
 Plugin 'honza/vim-snippets'
 " Plugin 'jaxbot/semantic-highlight.vim'
 Plugin 'jiangmiao/auto-pairs'
+Plugin 'kana/vim-submode'
 " Plugin 'kchmck/vim-coffee-script'
 " Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'mattn/emmet-vim'
@@ -30,13 +31,14 @@ Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'tclem/vim-arduino'
-" Plugin 'tpope/vim-abolish'
+Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
+Plugin 'vim-perl/vim-perl'
 Plugin 'vim-scripts/AutoComplPop'
 " Plugin 'vim-scripts/slimv.vim'
 " Plugin 'wavded/vim-stylus'
@@ -52,14 +54,13 @@ while i <= 22
     let i += 1
 endwhile
 
-" set omnifunc=syntaxcomplete#Complete
-" set completeopt=longest,menuone
-" inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
-"   \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
-" inoremap <expr> <M-,> pumvisible() ? '<C-n>' :
-"   \ '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
-let g:SuperTabDefaultCompletionType = "<c-n>"
+set omnifunc=syntaxcomplete#Complete
+set completeopt=longest,menuone
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
+  \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+inoremap <expr> <M-,> pumvisible() ? '<C-n>' :
+  \ '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 
 set tabstop=2 shiftwidth=2 expandtab
 set spell
@@ -111,11 +112,6 @@ syntax on
 colorscheme darcula
 noremap ; :
 noremap ;; ;
-map <leader>= =
-noremap - <C-W>-
-nnoremap = <C-W>+
-noremap _ <C-W><
-noremap + <C-W>>
 map <C-J> <C-W>j
 map <C-K> <C-W>k
 map <C-L> <C-W>l
@@ -127,6 +123,7 @@ map <C-n> :NERDTreeToggle<CR>
 " map <C-f> <esc>gqip
 map <F3> :noautocmd vimgrep /TODO/ **/*<enter>
 map <F4> :!clear && ./%<Enter>
+map <F6> :!clear && perl6 %<Enter>
 map <C-_> gcc
   map <Leader>z z=1<Enter>
 nnoremap <Leader>p "*p
@@ -140,6 +137,7 @@ nnoremap <Tab> >>
 nnoremap <S-Tab> <<
 " nnoremap / /\v
 nnoremap ,at vap:Tab /&<Enter>vap:Tab /\\\\<Enter>
+autocmd BufEnter *.pl6 set nospell
 
 " vim-markdown configuration
 let g:vim_markdown_toc_autofit = 1
@@ -221,3 +219,21 @@ let g:airline_symbols.linenr = ''
 
 " emmet configuration
 let g:user_emmet_mode='a'    "enable all function in all mode.
+
+" Highlight a column in csv text.
+" :Csv 1    " highlight first column
+" :Csv 12   " highlight twelfth column
+" :Csv 0    " switch off highlight
+function! CSVH(colnr)
+  if a:colnr > 1
+    let n = a:colnr - 1
+    execute 'match Keyword /^\([^,]*,\)\{'.n.'}\zs[^,]*/'
+    execute 'normal! 0'.n.'f,'
+  elseif a:colnr == 1
+    match Keyword /^[^,]*/
+    normal! 0
+  else
+    match
+  endif
+endfunction
+command! -nargs=1 Csv :call CSVH(<args>)
