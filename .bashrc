@@ -141,3 +141,4 @@ export PATH="$PATH:/opt/rakudo-start-2016.10/bin:/opt/rakudo-start-2016.10/share
 export PATH="~/.rakudobrew/bin:$PATH"
 alias terminal='gnome-terminal &'
 export alias terminal='gnome-terminal &'
+export alias xclip="xclip - selection c"

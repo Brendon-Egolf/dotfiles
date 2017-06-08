@@ -9,7 +9,7 @@ snippet frac "create a LaTeX math fraction" i
 endsnippet
 
 snippet log "create a LaTeX math log function" i
-\log_$1 $2
+\log_$1{$2}$0
 endsnippet
 
 snippet lim "add LaTeX limit" i
@@ -82,4 +82,12 @@ snippet acot "add an inverse cot" i
 \cot^{-1}{$1}$0
 endsnippet
 
+snippet inverse "add an inverse function" i
+f^{-1}(${1:x})$0
+endsnippet
 
+snippet align "adds an align* environment in LaTeX" b
+\begin{align*}
+	$0
+\end{align*}
+endsnippet

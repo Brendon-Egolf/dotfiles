@@ -4,44 +4,57 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 " Bundle 'mattn/gist-vim'
 " Bundle 'mattn/webapi-vim'
-Plugin 'AndrewRadev/switch.vim'
 " Plugin 'Shougo/neocomplete.vim'
 " Plugin 'Shougo/vimproc.vim'
 " Plugin 'Shougo/vimshell.vim'
+" Plugin 'drmikehenry/vim-headerguard'
+" Plugin 'elzr/vim-json'
+" Plugin 'ervandew/supertab'
+" Plugin 'jaxbot/semantic-highlight.vim'
+" Plugin 'kchmck/vim-coffee-script'
+" Plugin 'kien/rainbow_parentheses.vim'
+" Plugin 'mtth/scratch.vim'
+" Plugin 'raimondi/delimitmate'
+" Plugin 'vim-scripts/slimv.vim'
+" Plugin 'xolox/vim-session'
+Bundle 'lrvick/Conque-Shell'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'AndrewRadev/switch.vim'
+" Plugin 'burnettk/vim-angular'
 Plugin 'SirVer/ultisnips'
 Plugin 'bronson/vim-trailing-whitespace'
 " Plugin 'digitaltoad/vim-pug'
-" Plugin 'drmikehenry/vim-headerguard'
 Plugin 'easymotion/vim-easymotion'
-" Plugin 'elzr/vim-json'
-" Plugin 'ervandew/supertab'
+" Plugin 'gcmt/taboo.vim'
 Plugin 'gmarik/Vundle.vim'
 Plugin 'godlygeek/tabular'
+Plugin 'heavenshell/vim-jsdoc'
 Plugin 'henrik/vim-indexed-search'
 Plugin 'honza/vim-snippets'
-" Plugin 'jaxbot/semantic-highlight.vim'
 Plugin 'jiangmiao/auto-pairs'
+Plugin 'jpalardy/vim-slime'
 Plugin 'kana/vim-submode'
-" Plugin 'kchmck/vim-coffee-script'
-" Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'leafgarland/typescript-vim'
+Plugin 'majutsushi/tagbar'
 Plugin 'mattn/emmet-vim'
 Plugin 'michaeljsmith/vim-indent-object'
-" Plugin 'mtth/scratch.vim'
-" Plugin 'raimondi/delimitmate'
+Plugin 'othree/yajs.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'tclem/vim-arduino'
 Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-rails'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'vim-perl/vim-perl'
-Plugin 'vim-scripts/AutoComplPop'
-" Plugin 'vim-scripts/slimv.vim'
-" Plugin 'wavded/vim-stylus'
+Plugin 'vim-scripts/Align'
+Plugin 'wavded/vim-stylus'
+Plugin 'xolox/vim-easytags'
+Plugin 'xolox/vim-misc'
 call vundle#end()
 filetype plugin indent on
 
@@ -53,14 +66,6 @@ while i <= 22
     let s:colorColumnString .= column . ','
     let i += 1
 endwhile
-
-set omnifunc=syntaxcomplete#Complete
-set completeopt=longest,menuone
-inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
-  \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
-inoremap <expr> <M-,> pumvisible() ? '<C-n>' :
-  \ '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 
 set tabstop=2 shiftwidth=2 expandtab
 set spell
@@ -87,9 +92,10 @@ set linebreak
 set autoread
 set autowriteall
 set backspace=2
-set cursorcolumn
+" set cursorcolumn
 set textwidth=89
 set formatoptions=tcqn1j
+set tags=./tags;
 
 " let &colorcolumn=s:colorColumnString.'90'
 
@@ -97,8 +103,8 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
-let g:syntastic_cpp_compiler = 'arm-linux-gnueabihf-g++'
-let g:syntastic_cpp_compiler_options = "-O3 -fPIC -g -Wall -Werror -std=c++11"
+let g:syntastic_cpp_compiler = 'g++'
+let g:syntastic_cpp_compiler_options = "-O3 -fPIC -g -Wall -Werror -std=c++11 -fextended-identifiers"
 hi clear SpellBad
 
 augroup myvimrc
@@ -106,7 +112,7 @@ augroup myvimrc
     au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
 augroup END
 autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 syntax on
 colorscheme darcula
@@ -125,7 +131,7 @@ map <F3> :noautocmd vimgrep /TODO/ **/*<enter>
 map <F4> :!clear && ./%<Enter>
 map <F6> :!clear && perl6 %<Enter>
 map <C-_> gcc
-  map <Leader>z z=1<Enter>
+map <Leader>z z=1<Enter>
 nnoremap <Leader>p "*p
 nmap :make :make vert copen<Enter>
 nnoremap j gj
@@ -137,6 +143,10 @@ nnoremap <Tab> >>
 nnoremap <S-Tab> <<
 " nnoremap / /\v
 nnoremap ,at vap:Tab /&<Enter>vap:Tab /\\\\<Enter>
+nnoremap <Leader>t :!gnome-terminal<Enter><Enter>
+nnoremap <Leader>ut :UpdateTags<Enter>:HighlightTags<Enter>
+cnoreabbrev cd cd %:p:h
+
 autocmd BufEnter *.pl6 set nospell
 
 " vim-markdown configuration
@@ -145,6 +155,8 @@ let g:vim_markdown_math = 1
 let g:vim_markdown_new_list_item_indent = 2
 
 autocmd BufEnter *.es6,*.html,*.scss map <F2> :!npm run build<Enter>
+" autocmd BufEnter *.yml set tabstop=4 shiftwidth=4 expandtab
+autocmd BufEnter *.yml set nospell
 autocmd BufEnter *.md map <F2> :!pandoc -o document.pdf % -s && mupdf document.pdf <Enter><Enter>
 au BufRead,BufNewFile *.pde set filetype=arduino
 au BufRead,BufNewFile *.ino set filetype=arduino
@@ -237,3 +249,20 @@ function! CSVH(colnr)
   endif
 endfunction
 command! -nargs=1 Csv :call CSVH(<args>)
+
+" vim-session configuration
+let g:session_default_name='.Session'
+let g:session_autoload='yes'
+let g:session_autosave_periodic=1
+let g:session_autosave_silent=1
+let g:session_verbose_messages=0
+
+" vim-JSDoc
+let g:jsdoc_allow_input_prompt=1
+let g:jsdoc_input_description=1
+let g:jsdoc_access_descriptions=1
+let g:jsdoc_enable_es6=1
+let g:jsdoc_underscore_private=1
+
+" easytags configuration
+"
